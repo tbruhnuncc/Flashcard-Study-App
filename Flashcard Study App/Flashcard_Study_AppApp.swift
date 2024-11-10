@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct Flashcard_Study_AppApp: App {
+    @State private var flashCardController = FlashcardController()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ViewCollectionViewController()
+                .environment(\.managedObjectContext, flashCardController.container.viewContext)
         }
     }
 }
+
