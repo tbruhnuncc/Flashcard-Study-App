@@ -11,6 +11,8 @@ struct AddFlashcardViewController: View {
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
+    var collection: Collection
+    
     @State private var frontText = ""
     @State private var backText = ""
     @State private var showToast = false
@@ -37,6 +39,7 @@ struct AddFlashcardViewController: View {
                             newFlashcard.id = UUID()
                             newFlashcard.frontText = frontText // Updated to use front
                             newFlashcard.backText = backText   // Updated to use back
+                            newFlashcard.collection = collection
                             
                             try? moc.save()
                             dismiss()
@@ -45,13 +48,8 @@ struct AddFlashcardViewController: View {
                 }
             }
         }
-        .navigationTitle("Fill out the front and back of the flashcard")
         .overlay(
                         ToastView(message: toastMessage, isVisible: $showToast)
         )
     }
-}
-
-#Preview {
-    AddFlashcardViewController()
 }
