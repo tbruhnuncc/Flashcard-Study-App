@@ -12,7 +12,7 @@ struct Flashcard_Study_AppApp: App {
     @State private var flashCardController = FlashcardController()
     var body: some Scene {
         WindowGroup {
-            ViewCollectionViewController()
+            HomePageViewController()
                 .environment(\.managedObjectContext, flashCardController.container.viewContext)
         }
     }
