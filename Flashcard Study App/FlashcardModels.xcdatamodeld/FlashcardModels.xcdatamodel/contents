@@ -3,7 +3,7 @@
     <entity name="Collection" representedClassName=".Collection" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="flashcards" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Flashcard" inverseName="collection" inverseEntity="Flashcard"/>
+        <relationship name="flashcards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Flashcard" inverseName="collection" inverseEntity="Flashcard"/>
         <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="collections" inverseEntity="Group"/>
     </entity>
     <entity name="Flashcard" representedClassName=".Flashcard" syncable="YES" codeGenerationType="class">
@@ -15,6 +15,6 @@
     <entity name="Group" representedClassName=".Group" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="collections" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Collection" inverseName="group" inverseEntity="Collection"/>
+        <relationship name="collections" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Collection" inverseName="group" inverseEntity="Collection"/>
     </entity>
 </model>

@@ -54,7 +54,7 @@ struct ViewCollectionViewController: View {
                 }
                 .navigationTitle("Collection")
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem(placement: .primaryAction) {
                         Button {
                             showingAddScreen.toggle()
                         } label: {
@@ -86,46 +86,6 @@ struct ViewCollectionViewController: View {
         }
     }
 }
-    
-//    var body: some View {
-//        NavigationView {
-//            VStack {
-//                ScrollView {
-//                    LazyVStack {
-//                        ForEach(flashcards) { flashcard in
-//                            FlashcardView(flashcard: flashcard)
-//                                .swipeActions {
-//                                    Button(role: .destructive) {
-//                                        deleteFlashcard(flashcard)
-//                                    } label: {
-//                                        Label("Delete", systemImage: "trash")
-//                                    }
-//                                }
-//                        }
-//                    }
-//                    .padding(.horizontal)
-//                }
-//                .navigationTitle(collection.name ?? "Collection")
-//                .toolbar {
-//                    ToolbarItem(placement: .navigationBarTrailing) {
-//                        Button {
-//                            showingAddScreen.toggle()
-//                        } label: {
-//                            Label("Add flashcard", systemImage: "plus")
-//                        }
-//                    }
-//                }
-//                .sheet(isPresented: $showingAddScreen) {
-//                    AddFlashcardViewController(collection: collection)
-//                }
-//            }
-//        }
-//    }
-//}
-
-//#Preview {
-//    AddFlashcardViewController()
-//}
 
 struct FlashcardView: View {
     var flashcard: Flashcard
