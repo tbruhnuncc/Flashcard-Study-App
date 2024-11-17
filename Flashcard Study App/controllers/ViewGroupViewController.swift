@@ -1,10 +1,3 @@
-//
-//  ViewGroupViewController.swift
-//  Flashcard Study App
-//
-//  Created by Thomas Bruhn on 11/11/24.
-//
-
 import SwiftUI
 
 struct ViewGroupViewController: View {
@@ -23,27 +16,40 @@ struct ViewGroupViewController: View {
     }
     
     var body: some View {
-        NavigationView {
-            List(collections) { collection in
+        List {
+            ForEach(collections) { collection in
                 NavigationLink(destination: ViewCollectionViewController(collection: collection)) {
                     Text(collection.name ?? "Unknown Collection")
                 }
             }
-            .navigationTitle(group.name ?? "Group")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingAddScreen.toggle()
-                    } label: {
-                        Label("Add a Collection", systemImage: "plus")
-                    }
+            .onDelete(perform: deleteCollection)
+        }
+        .navigationTitle(group.name ?? "Group")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showingAddScreen.toggle()
+                } label: {
+                    Label("Add a Collection", systemImage: "plus")
                 }
             }
-            .sheet(isPresented: $showingAddScreen) {
-                AddCollectionViewController(group: group)
-            }
+        }
+        .sheet(isPresented: $showingAddScreen) {
+            AddCollectionViewController(group: group)
+        }
+    }
+    
+    // Delete a collection when user swipes
+    func deleteCollection(at offsets: IndexSet) {
+        for index in offsets {
+            let collection = collections[index]
+            moc.delete(collection)
+        }
+        
+        do {
+            try moc.save()
+        } catch {
+            print("Error saving context after deletion: \(error.localizedDescription)")
         }
     }
 }
-
-

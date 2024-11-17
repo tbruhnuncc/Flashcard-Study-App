@@ -1,10 +1,3 @@
-//
-//  HomePageViewController.swift
-//  Flashcard Study App
-//
-//  Created by Thomas Bruhn on 11/11/24.
-//
-
 import SwiftUI
 
 struct HomePageViewController: View {
@@ -13,13 +6,15 @@ struct HomePageViewController: View {
     
     @State private var showingAddScreen = false
     
-    
     var body: some View {
         NavigationView {
-            List(groups) { group in
-                NavigationLink(destination: ViewGroupViewController(group: group)) {
-                    Text(group.name ?? "Unknown Collection")
+            List {
+                ForEach(groups) { group in
+                    NavigationLink(destination: ViewGroupViewController(group: group)) {
+                        Text(group.name ?? "Unknown Group")
+                    }
                 }
+                .onDelete(perform: deleteGroup)
             }
             .navigationTitle("Flashcard Study App")
             .toolbar {
@@ -36,9 +31,17 @@ struct HomePageViewController: View {
             }
         }
     }
-
-}
-
-#Preview {
-    HomePageViewController()
+    
+    func deleteGroup(at offsets: IndexSet) {
+        for index in offsets {
+            let group = groups[index]
+            moc.delete(group)
+        }
+        
+        do {
+            try moc.save()
+        } catch {
+            print("Error saving context after deletion: \(error.localizedDescription)")
+        }
+    }
 }
