@@ -1,10 +1,3 @@
-//
-//  AddFlashcardViewController.swift
-//  Flashcard Study App
-//
-//  Created by Thomas Bruhn on 11/2/24.
-//
-
 import SwiftUI
 
 struct ViewCollectionViewController: View {
@@ -26,51 +19,44 @@ struct ViewCollectionViewController: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack {
-                ScrollView {
-                    LazyVStack {
-                        ForEach(flashcards) { flashcard in
-                            FlashcardView(flashcard: flashcard)
-                                .contextMenu {
-                                    Button(action: {
-                                        // Edit action
-                                        selectedFlashcard = flashcard
-                                        showingEditScreen = true
-                                    }) {
-                                        Label("Edit", systemImage: "pencil")
-                                    }
-                                    Button(role: .destructive) {
-                                        if let index = flashcards.firstIndex(of: flashcard) {
-                                            deleteFlashcards(at: IndexSet(integer: index))
-                                        }
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
+        VStack {
+            ScrollView {
+                LazyVStack {
+                    ForEach(flashcards) { flashcard in
+                        FlashcardView(flashcard: flashcard)
+                            .contextMenu {
+                                Button(action: {
+                                    // Edit action
+                                    selectedFlashcard = flashcard
+                                    showingEditScreen = true
+                                }) {
+                                    Label("Edit", systemImage: "pencil")
                                 }
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                .navigationTitle("Collection")
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button {
-                            showingAddScreen.toggle()
-                        } label: {
-                            Label("Add flashcard", systemImage: "plus")
-                        }
+                                Button(role: .destructive) {
+                                    if let index = flashcards.firstIndex(of: flashcard) {
+                                        deleteFlashcards(at: IndexSet(integer: index))
+                                    }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
                     }
                 }
-                .sheet(isPresented: $showingAddScreen) {
-                    AddFlashcardViewController(collection: collection)
-                }
-//                .sheet(isPresented: $showingEditScreen) {
-//                    if let selectedFlashcard = selectedFlashcard {
-//                        EditFlashcardViewController(flashcard: selectedFlashcard)
-//                    }
-//                }
+                .padding(.horizontal)
             }
+        }
+        .navigationTitle(collection.name ?? "Collection")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showingAddScreen.toggle()
+                } label: {
+                    Label("Add flashcard", systemImage: "plus")
+                }
+            }
+        }
+        .sheet(isPresented: $showingAddScreen) {
+            AddFlashcardViewController(collection: collection)
         }
     }
     
@@ -93,28 +79,33 @@ struct FlashcardView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            VStack(alignment: .leading, spacing: 10) {
+            VStack {
                 if showingBack {
                     Text(flashcard.backText ?? "Back Text")
                         .font(.subheadline)
                         .foregroundColor(.gray)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Make the text fill the space
                 } else {
                     Text(flashcard.frontText ?? "Front Text")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Same for the front text
                 }
             }
-            .padding()
-            .frame(width: geometry.size.width - 32) // Adjust the width to have padding on both sides
+            .padding() // Padding around the whole view, not inside the frame
             .background(Color.white)
             .cornerRadius(10)
             .shadow(radius: 5)
-            .padding(.horizontal, 16) // Add horizontal padding so the card does not touch the edges
             .onTapGesture {
                 withAnimation {
                     showingBack.toggle()
                 }
             }
+            .frame(
+                minHeight: 180, // Set minimum height
+                maxHeight: 250, // Set max height
+                alignment: .center // Center the entire flashcard
+            )
         }
-        .frame(height: 150) // Give a fixed height or use .frame(minHeight: 150)
+        .frame(minHeight: 180) // Ensure the GeometryReader itself has a minimum height
     }
 }
 
