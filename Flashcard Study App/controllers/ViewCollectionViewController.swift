@@ -76,37 +76,46 @@ struct ViewCollectionViewController: View {
 struct FlashcardView: View {
     var flashcard: Flashcard
     @State private var showingBack = false
-
+    
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                if showingBack {
+        VStack {
+            if showingBack {
+                // Show back content: image + back text
+                VStack {
+                    if let imageData = flashcard.image, let uiImage = UIImage(data: imageData) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: 250) // Use max width and reasonable height for image
+                            .cornerRadius(10)
+                    }
                     Text(flashcard.backText ?? "Back Text")
                         .font(.subheadline)
                         .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Make the text fill the space
-                } else {
-                    Text(flashcard.frontText ?? "Front Text")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Same for the front text
+                        .padding(.top, 10)
                 }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity) // Ensure the back view expands to fill space
+            } else {
+                // Show front content: text
+                Text(flashcard.frontText ?? "Front Text")
+                    .font(.headline)
+                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity) // Ensure the front text also fills the space
             }
-            .padding() // Padding around the whole view, not inside the frame
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(radius: 5)
-            .onTapGesture {
-                withAnimation {
-                    showingBack.toggle()
-                }
-            }
-            .frame(
-                minHeight: 180, // Set minimum height
-                maxHeight: 250, // Set max height
-                alignment: .center // Center the entire flashcard
-            )
         }
-        .frame(minHeight: 180) // Ensure the GeometryReader itself has a minimum height
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(radius: 5)
+        .padding(.horizontal, 16)
+        .onTapGesture {
+            withAnimation {
+                showingBack.toggle()
+            }
+        }
+        .frame(height: 300) // Fixed height for the card
     }
 }
+
 
 
