@@ -10,6 +10,7 @@
         <attribute name="backText" optional="YES" attributeType="String"/>
         <attribute name="frontText" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="image" optional="YES" attributeType="Binary"/>
         <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Collection" inverseName="flashcards" inverseEntity="Collection"/>
     </entity>
     <entity name="Group" representedClassName=".Group" syncable="YES" codeGenerationType="class">
