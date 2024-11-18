@@ -7,6 +7,7 @@ struct ViewCollectionViewController: View {
     @State private var showingAddScreen = false
     @State private var showingEditScreen = false
     @State private var selectedFlashcard: Flashcard?
+    @State private var showingQuizScreen = false // Track showing quiz screen
     
     var collection: Collection
     
@@ -47,16 +48,26 @@ struct ViewCollectionViewController: View {
         }
         .navigationTitle(collection.name ?? "Collection")
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showingAddScreen.toggle()
-                } label: {
-                    Label("Add flashcard", systemImage: "plus")
+            ToolbarItem(placement: .primaryAction) {
+                HStack {
+                    Button {
+                        showingAddScreen.toggle()
+                    } label: {
+                        Label("Add flashcard", systemImage: "plus")
+                    }
+                    Button {
+                        showingQuizScreen.toggle()
+                    } label: {
+                        Label("Quiz", systemImage: "questionmark.circle")
+                    }
                 }
-            }
+                                }
         }
         .sheet(isPresented: $showingAddScreen) {
             AddFlashcardViewController(collection: collection)
+        }
+        .sheet(isPresented: $showingQuizScreen) {
+            QuizViewController(collection: collection)
         }
     }
     
@@ -113,7 +124,7 @@ struct FlashcardView: View {
                 showingBack.toggle()
             }
         }
-        .frame(height: 300) // Fixed height for the card
+        .frame(height: 200) // Fixed height for the card
     }
 }
 
