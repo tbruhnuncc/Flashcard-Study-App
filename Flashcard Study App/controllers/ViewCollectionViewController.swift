@@ -1,4 +1,5 @@
 import SwiftUI
+import os
 
 struct ViewCollectionViewController: View {
     @Environment(\.managedObjectContext) var moc
@@ -8,6 +9,8 @@ struct ViewCollectionViewController: View {
     @State private var showingEditScreen = false
     @State private var selectedFlashcard: Flashcard?
     @State private var showingQuizScreen = false // Track showing quiz screen
+    @State private var flashcardToEdit: Flashcard?
+    @State private var fetchRequestTrigger = UUID() // State variable to trigger fetch request
     
     var collection: Collection
     
@@ -28,8 +31,8 @@ struct ViewCollectionViewController: View {
                             .contextMenu {
                                 Button(action: {
                                     // Edit action
-                                    selectedFlashcard = flashcard
-                                    showingEditScreen = true
+                                    flashcardToEdit = flashcard
+                                    showingEditScreen.toggle()
                                 }) {
                                     Label("Edit", systemImage: "pencil")
                                 }
@@ -61,7 +64,7 @@ struct ViewCollectionViewController: View {
                         Label("Quiz", systemImage: "questionmark.circle")
                     }
                 }
-                                }
+            }
         }
         .sheet(isPresented: $showingAddScreen) {
             AddFlashcardViewController(collection: collection)
@@ -69,6 +72,12 @@ struct ViewCollectionViewController: View {
         .sheet(isPresented: $showingQuizScreen) {
             QuizViewController(collection: collection)
         }
+        .sheet(item: $flashcardToEdit) { flashcard in
+            EditFlashcardViewController(flashcard: flashcard, onSave: {
+                fetchRequestTrigger = UUID() // Trigger a new fetch request
+            })
+        }
+        .id(fetchRequestTrigger) // Use the state variable to refresh the view
     }
     
     private func deleteFlashcards(at offsets: IndexSet) {
@@ -83,6 +92,7 @@ struct ViewCollectionViewController: View {
         }
     }
 }
+
 
 struct FlashcardView: View {
     var flashcard: Flashcard
